@@ -16,7 +16,7 @@ R tutorials for implementing target trial emulation (TTE) and causal inference m
 
 ## Start here
 
-- **All tutorials:** See the [tutorials listing](docs/index.html)
+- **All tutorials:** See the [tutorials listing](index.html)
 - Or jump to: [Preparing Analysis Data by Emulating A Target Trial](TTEdemo.html)
 - Or jump to: [Intention to Treat Analysis](IntentionToTreat.html)
 - Or jump to: [Per-protocol Analysis](PerProtocol.html)
