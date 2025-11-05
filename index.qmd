@@ -12,9 +12,12 @@ listing:
 
 ## About
 
-Short blurb about what’s in these tutorials and who they’re for.
+R tutorials for implementing target trial emulation (TTE) and causal inference methods to estimate treatment effects using observational data. These tutorials introduce important concepts in TTE and provide step-by-step instructions for deploying the procedures with examples.  
 
 ## Start here
 
 - **All tutorials:** See the [tutorials listing](tutorials/index.qmd)
-- Or jump to a popular lesson: [TTE Demo](tutorials/TTEdemo.html)
+- Or jump to: [Preparing Analysis Data by Emulating A Target Trial](tutorials/TTEdemo.html)
+- Or jump to: [Intention to Treat Analysis](tutorials/IntentionToTreat.html)
+- Or jump to: [Per-protocol Analysis](tutorials/PerProtocol.html)
+- Or jump to: [Doubly Robust Estimation of Average Treatment Effects](tutorials/DR.html)
