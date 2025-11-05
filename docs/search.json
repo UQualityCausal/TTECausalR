@@ -4,20 +4,20 @@
     "href": "index.html",
     "title": "Welcome to Target Trial Emulation and Causal Inference Tutorials",
     "section": "",
-    "text": "Short blurb about what’s in these tutorials and who they’re for."
+    "text": "R tutorials for implementing target trial emulation (TTE) and causal inference methods to estimate treatment effects using observational data. These tutorials introduce important concepts in TTE and provide step-by-step instructions for deploying the procedures with examples."
   },
   {
     "objectID": "index.html#about",
     "href": "index.html#about",
     "title": "Welcome to Target Trial Emulation and Causal Inference Tutorials",
     "section": "",
-    "text": "Short blurb about what’s in these tutorials and who they’re for."
+    "text": "R tutorials for implementing target trial emulation (TTE) and causal inference methods to estimate treatment effects using observational data. These tutorials introduce important concepts in TTE and provide step-by-step instructions for deploying the procedures with examples."
   },
   {
     "objectID": "index.html#start-here",
     "href": "index.html#start-here",
     "title": "Welcome to Target Trial Emulation and Causal Inference Tutorials",
     "section": "Start here",
-    "text": "Start here\n\nAll tutorials: See the tutorials listing\nOr jump to a popular lesson: TTE Demo"
+    "text": "Start here\n\nAll tutorials: See the tutorials listing\nOr jump to: Preparing Analysis Data by Emulating A Target Trial\nOr jump to: Intention to Treat Analysis\nOr jump to: Per-protocol Analysis\nOr jump to: Doubly Robust Estimation of Average Treatment Effects"
   }
 ]
