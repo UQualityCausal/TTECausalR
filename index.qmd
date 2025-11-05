@@ -1,0 +1,19 @@
+---
+title: "Welcome to Target Trial Emulation and Causal Inference Tutorials"
+listing:
+  contents:
+    - "*.qmd"
+    - "*.Rmd"
+  sort: "title"
+  type: default
+  fields: [title, description, reading-time]
+---
+
+## About
+
+Short blurb about what’s in these tutorials and who they’re for.
+
+## Start here
+
+- **All tutorials:** See the [tutorials listing](tutorials/index.qmd)
+- Or jump to a popular lesson: [TTE Deo](tutorials/TTEdemo.html)

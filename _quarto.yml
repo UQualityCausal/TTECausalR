@@ -1,0 +1,33 @@
+project:
+  type: website
+  output-dir: docs     # <- GitHub Pages will serve from /docs
+
+website:
+  title: "Target Trial Emulation and Causal Inference Tutorials"
+  site-url: https://UQualityCausal.github.io/TargetTrialEmulation/
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Home"
+      - text: "Tutorials"
+        menu:
+          - href: tutorials/TTEdemo.html
+            text: "Preparing Analysis Data by Emulating A Target Trial"
+          - href: tutorials/IntentionToTreat.html
+            text: "Intention to Treat Analysis"
+          - href: tutorials/DR.html
+            text: "Doubly Robust Estimation of Average Treatment Effects"
+  repo-url: https://github.com/UQualityCausal/TargetTrialEmulation
+  repo-actions: [source, issue]   # "View source" / "Open issue" buttons
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-fold: show
+    df-print: paged
+
+execute:
+  freeze: auto         # re-render only when source changes
+  cache: true          # cache chunk results
