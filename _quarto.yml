@@ -11,13 +11,13 @@ website:
         text: Home
       - text: "Tutorials"
         menu:
-          - href: tutorials/TTEdemo.html
+          - href: TTEdemo.html
             text: "Preparing Analysis Data by Emulating A Target Trial"
-          - href: tutorials/IntentionToTreat.html
+          - href: IntentionToTreat.html
             text: "Intention to Treat Analysis"
-          - href: tutorials/PerProtocol.html
+          - href: PerProtocol.html
             text: "Per-protocol Analysis"
-          - href: tutorials/DR.html
+          - href: DR.html
             text: "Doubly Robust Estimation of Average Treatment Effects"
   repo-url: https://github.com/UQualityCausal/TargetTrialEmulation
   repo-actions: [source, issue]   # "View source" / "Open issue" buttons
