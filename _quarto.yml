@@ -13,6 +13,8 @@ website:
             text: "Preparing Analysis Data by Emulating A Target Trial"
           - href: tutorials/IntentionToTreat.html
             text: "Intention to Treat Analysis"
+          - href: tutorials/PerProtocol.Rmd
+            text: "Per-protocol Analysis"
           - href: tutorials/DR.html
             text: "Doubly Robust Estimation of Average Treatment Effects"
   repo-url: https://github.com/UQualityCausal/TargetTrialEmulation
