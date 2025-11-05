@@ -4,7 +4,7 @@ project:
 
 website:
   title: "Target Trial Emulation and Causal Inference Tutorials"
-  site-url: https://UQualityCausal.github.io/TargetTrialEmulation/
+  site-url: https://UQualityCausal.github.io/TTECausalR/
   navbar:
     left:
       - href: index.qmd
@@ -19,7 +19,7 @@ website:
             text: "Per-protocol Analysis"
           - href: DR.html
             text: "Doubly Robust Estimation of Average Treatment Effects"
-  repo-url: https://github.com/UQualityCausal/TargetTrialEmulation
+  repo-url: https://github.com/UQualityCausal/TTECausalR
   repo-actions: [source, issue]   # "View source" / "Open issue" buttons
 
 format:
