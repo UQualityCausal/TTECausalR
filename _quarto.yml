@@ -4,7 +4,8 @@ project:
 
 website:
   title: "Target Trial Emulation and Causal Inference Tutorials"
-  site-url: https://UQualityCausal.github.io/TTECausalR/
+  site-url: https://uqualitycausal.github.io/TTECausalR/
+  site-path: /TTECausalR/
   navbar:
     left:
       - href: index.qmd

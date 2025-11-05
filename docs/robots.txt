@@ -1,1 +1,1 @@
-Sitemap: https://UQualityCausal.github.io/TargetTrialEmulation/sitemap.xml
+Sitemap: https://UQualityCausal.github.io/TTECausalR/sitemap.xml
