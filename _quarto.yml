@@ -12,10 +12,12 @@ website:
         text: Home
       - text: "Tutorials"
         menu:
-          - href: TTEdemo.html
-            text: "Preparing Analysis Data by Emulating A Target Trial"
+          - href: TTEdemoSig.html
+            text: "Preparing Analysis Data by Emulating A Single Target Trial"
+          - href: TTEdemoSeq.html
+            text: "Preparing Analysis Data by Emulating A Sequence of Target Trials"
           - href: IntentionToTreat.html
-            text: "Intention to Treat Analysis"
+            text: "Introduction to Causal Inference and Intention to Treat Analysis"
           - href: PerProtocol.html
             text: "Per-protocol Analysis"
           - href: DR.html
