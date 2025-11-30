@@ -20,8 +20,8 @@ website:
             text: "Introduction to Causal Inference and Intention to Treat Analysis"
           - href: PerProtocol.html
             text: "Per-protocol Analysis"
-          - href: DR.html
-            text: "Doubly Robust Estimation of Average Treatment Effects"
+          - href: DRpseudo.html
+            text: "Doubly Robust Estimation of Average Treatment Effects Using Pseudo Observations"
   repo-url: https://github.com/UQualityCausal/TTECausalR
   repo-actions: [source, issue]   # "View source" / "Open issue" buttons
 
