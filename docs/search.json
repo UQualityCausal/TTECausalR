@@ -18,6 +18,6 @@
     "href": "index.html#start-here",
     "title": "Welcome to Target Trial Emulation and Causal Inference Tutorials",
     "section": "Start here",
-    "text": "Start here\n\nAll tutorials: See the tutorials listing\nOr jump to: Preparing Analysis Data by Emulating A Single Target Trial\nOr jump to: Preparing Analysis Data by Emulating A Sequence of Target Trials\nOr jump to: Introduction to Causal Inference and Intention to Treat Analysis\nOr jump to: Per-protocol Analysis\nOr jump to: Doubly Robust Estimation of Average Treatment Effects"
+    "text": "Start here\n\nAll tutorials: See the tutorials listing\nOr jump to: Preparing Analysis Data by Emulating A Single Target Trial\nOr jump to: Preparing Analysis Data by Emulating A Sequence of Target Trials\nOr jump to: Introduction to Causal Inference and Intention to Treat Analysis\nOr jump to: Per-protocol Analysis\nOr jump to: Doubly Robust Estimation of Average Treatment Effects Using Pseudo Observations\nOr jump to: Augmented Inverse Probability Weighted Complete Case Estimator for Survival Outcomes"
   }
 ]
