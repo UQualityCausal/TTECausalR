@@ -11,7 +11,7 @@
 
 <meta name="author" content="Peirong Hao, Ravinder Singh, Kevin Ying, Adam Bress, Tom Greene, Yizhe Xu" />
 
-<meta name="date" content="2025-11-29" />
+<meta name="date" content="2025-12-05" />
 
 <title>Doubly Robust Estimation of Causal Effects in Survival Analysis</title>
 
@@ -601,7 +601,7 @@ display: none;
 in Survival Analysis</h1>
 <h4 class="author">Peirong Hao, Ravinder Singh, Kevin Ying, Adam Bress,
 Tom Greene, Yizhe Xu<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></h4>
-<h4 class="date">2025-11-29</h4>
+<h4 class="date">2025-12-05</h4>
 
 </div>
 
@@ -692,8 +692,9 @@ estimator of the asymptotic variance is recommended <span class="citation">(<a h
 <p>The DR estimator requires standard identifiability assumptions in
 causal inference, including the stable unit treatment value assumption
 (SUTVA), positivity, consistency, and exchangeability.</p>
-<p>?? Add R package for implementing the DR estimator for continuous and
-binary outcomes</p>
+<p>For doubly robust estimators for continuous and binary outcomes,
+please refer to the [AIPW] R package (<a href="https://cran.r-project.org/web/packages/AIPW/AIPW.pdf" class="uri">https://cran.r-project.org/web/packages/AIPW/AIPW.pdf</a>)
+<span class="citation">Zhong et al. (<a href="#ref-zhong_aipw_2021">2021</a>)</span>.</p>
 </div>
 <div id="extension-to-survival-analysis" class="section level2">
 <h2>Extension to Survival Analysis</h2>
@@ -759,7 +760,7 @@ estimator under the random censoring scenario.</p>
 <h3>Data Generation</h3>
 <p>We first simulate the data according to the variable relationships
 depicted in the directed acyclic graph (DAG) below ?? add a DAG to
-illustrate the underlying relationship between variables</p>
+illustrate the underlying relationship between variables???</p>
 <pre class="r"><code>generate_data_noninf &lt;- function(n = 3000) {
   mu &lt;- rep(0, 3)
   sigma &lt;- matrix(c(1, 0, 0, 0, 1, 0, 0, 0, 1), nrow = 3) 
@@ -782,27 +783,79 @@ illustrate the underlying relationship between variables</p>
   Event &lt;- as.numeric(T_event &lt;= T_censor &amp; T_event &lt;= T_admin) # Event indicator
   
   return(data.frame(Z1 = Z1, Z2 = Z2, Z3 = Z3, D = D, Time = Time, Event = Event))
+}</code></pre>
+<pre class="r"><code>data &lt;- generate_data_noninf()
+
+attr(data$Z1, &quot;label&quot;) &lt;- &quot;Baseline value of Z1&quot;
+attr(data$Z2, &quot;label&quot;) &lt;- &quot;Baseline value of Z2&quot;
+attr(data$Z3, &quot;label&quot;) &lt;- &quot;Baseline value of Z3&quot;
+attr(data$D, &quot;label&quot;) &lt;- &quot;Treatment indicator (1 = treated, 0 = control)&quot;
+attr(data$Time, &quot;label&quot;) &lt;- &quot;Time index for longitudinal records&quot;
+attr(data$Event, &quot;label&quot;) &lt;- &quot;Event indicator (1 = event occurred, 0 = otherwise)&quot;
+
+get_label &lt;- function(x) {
+  lbl &lt;- attr(x, &quot;label&quot;, exact = TRUE)
+  if (is.null(lbl)) &quot;&quot; else as.character(lbl)
 }
 
-# ?? Create a data dictionary outside the code, see IntentionToTreat.Rmd row 155
-# -----------------------------
-# Data Dictionary:
-# Z1, Z2, Z3: baseline covariates
-# D: treatment indicator (1 = treated, 0 = control)  
-# Time: observed time 
-# Event: event indicator (1 if event occurred, 0 otherwise)
-# -----------------------------
+dict &lt;- data.frame(
+  Variable = names(data),
+  Meaning  = vapply(data, get_label, character(1)),
+  check.names = FALSE
+)
 
-data &lt;- generate_data_noninf()
-summary(data$Time)
+knitr::kable(dict, caption = &quot;Data Dictionary&quot;, row.names = FALSE) </code></pre>
+<table>
+<caption>Data Dictionary</caption>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Z1</td>
+<td align="left">Baseline value of Z1</td>
+</tr>
+<tr class="even">
+<td align="left">Z2</td>
+<td align="left">Baseline value of Z2</td>
+</tr>
+<tr class="odd">
+<td align="left">Z3</td>
+<td align="left">Baseline value of Z3</td>
+</tr>
+<tr class="even">
+<td align="left">D</td>
+<td align="left">Treatment indicator (1 = treated, 0 = control)</td>
+</tr>
+<tr class="odd">
+<td align="left">Time</td>
+<td align="left">Time index for longitudinal records</td>
+</tr>
+<tr class="even">
+<td align="left">Event</td>
+<td align="left">Event indicator (1 = event occurred, 0 =
+otherwise)</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>summary(data$Time)
 #&gt;     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 #&gt; 0.000001 0.155083 1.159158 2.542713 5.316837 7.000000
 
 table(data$Event)
 #&gt; 
 #&gt;    0    1 
-#&gt;  729 2271
-#?? Among the 729 subjects with no events, how many are early drop outs and how many are administratively censored?</code></pre>
+#&gt;  729 2271</code></pre>
+<p>Among the 729 subjects with no events, 90 were early dropouts and 639
+were administratively censored.</p>
+<pre class="r"><code>censored_subjects &lt;- data[data$Event == 0, ]
+(early_dropout &lt;- sum(censored_subjects$Time &lt; 7))
+#&gt; [1] 90
+(admin_censored &lt;- sum(censored_subjects$Time &gt;= 7))
+#&gt; [1] 639</code></pre>
 <p>With the simulation truth above, we first calculate the true ATE at
 multiple times.</p>
 <pre class="r"><code>get_true_survival &lt;- function(data, t, d_level) {
@@ -875,76 +928,58 @@ R package.</p>
 <pre class="r"><code>results_package &lt;- pseudo_dr_ate_pkg(data, times)  
 #&gt; Loading required namespace: prodlim
 
-results_package_tbl &lt;- rbind(ATE = round(results_package$ATE, 2),
-  `CI lower` = round(results_package$ci_lower, 2),
-  `CI upper` = round(results_package$ci_upper, 2))
+ate_with_ci &lt;- sapply(1:length(times), function(i) {
+  sprintf(&quot;%.3f (%.3f, %.3f)&quot;, results_package$ATE[i],
+  results_package$ci_lower[i], results_package$ci_upper[i])
+})
 
-colnames(results_package_tbl) &lt;- c(&quot;T=1&quot;, &quot;T=2&quot;, &quot;T=3&quot;)
-kable(results_package_tbl, caption = &quot;ATE and 95% Confidence Intervals&quot;) %&gt;% 
-  kable_styling(full_width = FALSE, font_size = 12) </code></pre>
-<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+results_package_tbl &lt;- data.frame(
+  `T = 1` = ate_with_ci[1], `T = 2` = ate_with_ci[2],
+  `T = 3` = ate_with_ci[3], check.names = FALSE
+)
+
+kable(results_package_tbl, caption = &quot;ATE (95% CIs)&quot;, align = c(&#39;c&#39;, &#39;c&#39;, &#39;c&#39;)) %&gt;% 
+  kable_styling(full_width = FALSE, font_size = 12) %&gt;%
+  footnote(general = sprintf(&quot;True ATE: %.3f, %.3f, %.3f&quot;,
+           results_true$ATE[1], results_true$ATE[2], results_true$ATE[3]),
+           general_title = &quot;&quot;, footnote_as_chunk = TRUE)</code></pre>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption style="font-size: initial !important;">
-ATE and 95% Confidence Intervals
+ATE (95% CIs)
 </caption>
 <thead>
 <tr>
-<th style="text-align:left;">
+<th style="text-align:center;">
+T = 1
 </th>
-<th style="text-align:right;">
-T=1
+<th style="text-align:center;">
+T = 2
 </th>
-<th style="text-align:right;">
-T=2
-</th>
-<th style="text-align:right;">
-T=3
+<th style="text-align:center;">
+T = 3
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-ATE
+<td style="text-align:center;">
+-0.133 (-0.164, -0.102)
 </td>
-<td style="text-align:right;">
--0.13
+<td style="text-align:center;">
+-0.159 (-0.190, -0.128)
 </td>
-<td style="text-align:right;">
--0.16
-</td>
-<td style="text-align:right;">
--0.16
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CI lower
-</td>
-<td style="text-align:right;">
--0.16
-</td>
-<td style="text-align:right;">
--0.19
-</td>
-<td style="text-align:right;">
--0.19
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CI upper
-</td>
-<td style="text-align:right;">
--0.10
-</td>
-<td style="text-align:right;">
--0.13
-</td>
-<td style="text-align:right;">
--0.13
+<td style="text-align:center;">
+-0.164 (-0.193, -0.134)
 </td>
 </tr>
 </tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> True ATE: -0.150, -0.160, -0.161
+</td>
+</tr>
+</tfoot>
 </table>
 </div>
 <div id="manual-coding" class="section level3">
@@ -1044,79 +1079,57 @@ se_manual &lt;- se_bootstrap(data, times)
 results_manual$ci_lower &lt;- results_manual$ATE - 1.96 * se_manual$se
 results_manual$ci_upper &lt;- results_manual$ATE + 1.96 * se_manual$se
 
-results_manual_tbl &lt;- rbind(ATE = round(results_manual$ATE, 2),
-  `CI lower` = round(results_manual$ci_lower, 2),
-  `CI upper` = round(results_manual$ci_upper, 2))
+ate_with_ci &lt;- sapply(1:length(times), function(i) {
+  sprintf(&quot;%.3f (%.3f, %.3f)&quot;, results_manual$ATE[i], 
+  results_manual$ci_lower[i], results_manual$ci_upper[i])})
 
-colnames(results_manual_tbl) &lt;- c(&quot;T=1&quot;, &quot;T=2&quot;, &quot;T=3&quot;)
-kable(results_manual_tbl, caption = &quot;ATE (95% CIs)&quot;) %&gt;% 
-  kable_styling(full_width = FALSE, font_size = 12) </code></pre>
-<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+results_manual_tbl &lt;- data.frame(
+  `T = 1` = ate_with_ci[1], `T = 2` = ate_with_ci[2],
+  `T = 3` = ate_with_ci[3], check.names = FALSE)
+
+kable(results_manual_tbl, caption = &quot;ATE (95% CI)&quot;, align = c(&#39;c&#39;, &#39;c&#39;, &#39;c&#39;)) %&gt;% 
+  kable_styling(full_width = FALSE, font_size = 12) %&gt;%
+  footnote(general = sprintf(&quot;True ATE: %.3f, %.3f, %.3f&quot;,
+           results_true$ATE[1], results_true$ATE[2], results_true$ATE[3]),
+           general_title = &quot;&quot;, footnote_as_chunk = TRUE)</code></pre>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption style="font-size: initial !important;">
-ATE (95% CIs)
+ATE (95% CI)
 </caption>
 <thead>
 <tr>
-<th style="text-align:left;">
+<th style="text-align:center;">
+T = 1
 </th>
-<th style="text-align:right;">
-T=1
+<th style="text-align:center;">
+T = 2
 </th>
-<th style="text-align:right;">
-T=2
-</th>
-<th style="text-align:right;">
-T=3
+<th style="text-align:center;">
+T = 3
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left;">
-ATE
+<td style="text-align:center;">
+-0.133 (-0.162, -0.103)
 </td>
-<td style="text-align:right;">
--0.13
+<td style="text-align:center;">
+-0.158 (-0.185, -0.131)
 </td>
-<td style="text-align:right;">
--0.16
-</td>
-<td style="text-align:right;">
--0.16
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CI lower
-</td>
-<td style="text-align:right;">
--0.16
-</td>
-<td style="text-align:right;">
--0.18
-</td>
-<td style="text-align:right;">
--0.19
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CI upper
-</td>
-<td style="text-align:right;">
--0.10
-</td>
-<td style="text-align:right;">
--0.13
-</td>
-<td style="text-align:right;">
--0.14
+<td style="text-align:center;">
+-0.163 (-0.188, -0.139)
 </td>
 </tr>
 </tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> True ATE: -0.150, -0.160, -0.161
+</td>
+</tr>
+</tfoot>
 </table>
-<pre class="r"><code>
-# ??reformat the table to put point estimate and CIs in the same cell as how I have it in caption. Also add truth to this table </code></pre>
 </div>
 <div id="model-misspecification-scenarios" class="section level3">
 <h3>Model misspecification scenarios</h3>
@@ -1176,7 +1189,47 @@ results_crude &lt;- crude_cox_estimator(data, times)</code></pre>
 <div id="evaluate-the-performance-of-pseudo-observation-based-dr-estimator" class="section level3">
 <h3>Evaluate the performance of pseudo-observation-based DR
 estimator</h3>
-<p>?? replace bias metric with root-mean-squared-error metric</p>
+<p>?? replace bias metric with root-mean-squared-error metric???</p>
+<pre class="r"><code># scenarios &lt;- c(
+#   &quot;0: Crude Cox (Unadjusted)&quot;,
+#   &quot;1: Both Correct&quot;,
+#   &quot;2: PS Correct, OR Incorrect&quot;,
+#   &quot;3: PS Incorrect, OR Correct&quot;,
+#   &quot;4: Both Incorrect&quot;)
+# 
+# # Calculate RMSE
+# calculate_rmse &lt;- function(estimated_vector, true_vector) {
+#   sqrt(mean((estimated_vector - true_vector)^2))
+# }
+# 
+# # Package column
+# package_rmse &lt;- c(
+#   &quot;—&quot;,  
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_1_package$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_2_package$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_3_package$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_4_package$ATE, results_true$ATE))
+# )
+# 
+# # Manual column
+# manual_rmse &lt;- c(
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_crude$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_1_manual$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_2_manual$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_3_manual$ATE, results_true$ATE)),
+#   sprintf(&quot;%.3f&quot;, calculate_rmse(results_4_manual$ATE, results_true$ATE))
+# )
+# 
+# rmse_table &lt;- data.frame(
+#   Scenario = scenarios, Package = package_rmse, Manual = manual_rmse)
+# 
+# kable(rmse_table, col.names = c(&quot;Scenario&quot;, &quot;Package RMSE&quot;, &quot;Manual RMSE&quot;),
+#       caption = &quot;Performance of the DR estimator&quot;, align = c(&#39;l&#39;, &#39;c&#39;, &#39;c&#39;)) %&gt;%
+#   kable_styling(full_width = FALSE, font_size = 12) %&gt;%
+#   #add_header_above(c(&quot; &quot; = 1, &quot;Package&quot; = 1, &quot;Manual&quot; = 1)) %&gt;%
+#   footnote(general = sprintf(&quot;True ATE: %.3f, %.3f, %.3f&quot;,
+#            results_true$ATE[1], results_true$ATE[2], results_true$ATE[3]),
+#            general_title = &quot;&quot;, footnote_as_chunk = TRUE)</code></pre>
 <pre class="r"><code>scenarios &lt;- c(
   &quot;0: Crude Cox (Unadjusted)&quot;,
   &quot;1: Both Correct&quot;,
@@ -1189,15 +1242,15 @@ format_bias &lt;- function(bias_vector) {
   paste(sprintf(&quot;%.3f&quot;, bias_vector), collapse = &quot;, &quot;)
 }
 
-# Package column (bias at T = 1, 2, 3)
-package_bias &lt;- c(&quot;—&quot;,  
+# Package column (bias at T = 1,2,3)
+package_bias &lt;- c(&quot;—&quot;,
   format_bias(sapply(1:length(times), function(i) results_1_package$ATE[i] - results_true$ATE[i])),
   format_bias(sapply(1:length(times), function(i) results_2_package$ATE[i] - results_true$ATE[i])),
   format_bias(sapply(1:length(times), function(i) results_3_package$ATE[i] - results_true$ATE[i])),
   format_bias(sapply(1:length(times), function(i) results_4_package$ATE[i] - results_true$ATE[i]))
 )
 
-# Manual column (bias at T = 1, 2, 3)
+# Manual column (bias at T = 1,2,3)
 manual_bias &lt;- c(
   format_bias(sapply(1:length(times), function(i) results_crude$ATE[i] - results_true$ATE[i])),
   format_bias(sapply(1:length(times), function(i) results_1_manual$ATE[i] - results_true$ATE[i])),
@@ -1318,7 +1371,7 @@ T = 1, 2, 3
 </tfoot>
 </table>
 <pre class="r"><code>
-#?? look further into the results at T=1 -- both correct models yielded larger bias than other scenarios</code></pre>
+#?? look further into the results at T=1 -- both correct models yielded larger bias than other scenarios. </code></pre>
 </div>
 </div>
 <div id="funding" class="section level2">
@@ -1350,6 +1403,12 @@ Data</em>. Springer Series in Statistics. New York, NY: Springer. <a href="https
 Wang, Jixian. 2018. <span>“A Simple, Doubly Robust, Efficient Estimator
 for Survival Functions Using Pseudo Observations.”</span>
 <em>Pharmaceutical Statistics</em> 17 (1): 38–48.
+</div>
+<div id="ref-zhong_aipw_2021" class="csl-entry">
+Zhong, Yongqi, Edward H Kennedy, Lisa M Bodnar, and Ashley I Naimi.
+2021. <span>“AIPW: An r Package for Augmented Inverse Probability
+Weighted Estimation of Average Causal Effects.”</span> <em>American
+Journal of Epidemiology</em>, July. <a href="https://doi.org/10.1093/aje/kwab207">https://doi.org/10.1093/aje/kwab207</a>.
 </div>
 </div>
 </div>
