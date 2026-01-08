@@ -24,6 +24,8 @@ website:
             text: "Doubly Robust Estimation of Average Treatment Effects Using Pseudo Observations"
           - href: DRaipwcc.html
             text: "Augmented Inverse Probability Weighted Complete Case Estimator for Survival Outcomes"
+          - href: IFvar.pdf
+            text: "Estimating the Variance of Inverse-probability weighted risk ratios using inflence functions"
   repo-url: https://github.com/UQualityCausal/TTECausalR
   repo-actions: [source, issue]   # "View source" / "Open issue" buttons
 

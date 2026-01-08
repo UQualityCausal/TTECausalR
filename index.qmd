@@ -5,6 +5,7 @@ listing:
     - "*.qmd"
     - "*.Rmd"
     - "*.html"
+    - "*.pdf"
   sort: "title"
   type: default
   fields: [title, description, reading-time]
@@ -23,3 +24,4 @@ R tutorials for implementing target trial emulation (TTE) and causal inference m
 - Or jump to: [Per-protocol Analysis](PerProtocol.html)
 - Or jump to: [Doubly Robust Estimation of Average Treatment Effects Using Pseudo Observations](DRpseudo.html)
 - Or jump to: [Augmented Inverse Probability Weighted Complete Case Estimator for Survival Outcomes](DRaipwcc.html)
+- Or jump to: [Estimating the Variance of Inverse-Probability Weighted Risk Ratios Using Influence Functions](IFvar.pdf)
