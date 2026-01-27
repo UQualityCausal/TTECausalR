@@ -91,7 +91,7 @@ We now demonstrate how to implement the AIPWCC estimator under the informative c
 
 We first simulate the data according to the variable relationships depicted in the directed acyclic graph (DAG) below.
 
-```{r fig.width=5, fig.height=3, dpi=100}
+```{r fig.width=5, fig.height=3, dpi=300}
 dag <- dagitty("dag {
   Z1 -> Treatment
   Z2 -> Treatment
