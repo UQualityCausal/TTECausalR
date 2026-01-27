@@ -106,7 +106,7 @@ dag <- dagitty("dag {
 
 coordinates(dag) <- list(
   x = c(Z3 = 0, Z4 = 0, Z1 = 1, Z2 = 1, Treatment = 1.5, Death = 3, Z6 = 4, Z7 = 4),
-  y = c(Z3 = 0.8, Z4 = 0.4, Z1 = 0.7, Z2 = 0.3, Treatment = 0.5, Death = 0.5, Z6 = 0.7, Z7 = 0.3)
+  y = c(Z3 = 0.8, Z4 = 0.4, Z1 = 0.7, Z2 = 0.3, Treatment = 0.5, Death = 0.52, Z6 = 0.7, Z7 = 0.3)
 )
 
 plot(dag)
